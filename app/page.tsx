@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getCategories } from "@/lib/listings";
 import CategoryTile from "@/components/CategoryTile";
 import { GlobeIcon, ShipIcon, PlaneIcon, TruckIcon } from "@/components/icons";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Projects & Logistics Directory — Find Global Freight & Logistics Providers",
+  },
+  description:
+    "Find and compare sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers worldwide. Free to list.",
+};
 
 export default async function HomePage() {
   const categories = await getCategories();

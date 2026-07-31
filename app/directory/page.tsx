@@ -1,20 +1,37 @@
 import type { Metadata } from "next";
-import { getCategories, getListings } from "@/lib/listings";
+import { CATEGORIES, getCategories, getListings, type Category } from "@/lib/listings";
 import DirectoryClient from "@/components/DirectoryClient";
-
-export const metadata: Metadata = {
-  title: "Browse the Directory",
-  description:
-    "Search and filter verified sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers by category and country.",
-};
 
 type DirectoryPageProps = {
   searchParams: Promise<{ category?: string | string[] }>;
 };
 
+function resolveCategoryParam(params: { category?: string | string[] }): Category | undefined {
+  const raw = Array.isArray(params.category) ? params.category[0] : params.category;
+  return CATEGORIES.find((category) => category === raw);
+}
+
+export async function generateMetadata({ searchParams }: DirectoryPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const category = resolveCategoryParam(params);
+
+  if (category) {
+    return {
+      title: `${category} Providers Directory`,
+      description: `Browse verified and unclaimed ${category.toLowerCase()} providers in the Projects & Logistics directory.`,
+    };
+  }
+
+  return {
+    title: "Browse the Directory",
+    description:
+      "Search and filter verified sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers by category and country.",
+  };
+}
+
 export default async function DirectoryPage({ searchParams }: DirectoryPageProps) {
   const params = await searchParams;
-  const categoryParam = Array.isArray(params.category) ? params.category[0] : params.category;
+  const category = resolveCategoryParam(params);
   const [listings, categories] = await Promise.all([getListings(), getCategories()]);
 
   return (
@@ -33,7 +50,7 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
         <DirectoryClient
           listings={listings}
           categories={categories}
-          initialCategory={categoryParam}
+          initialCategory={category}
         />
       </div>
     </section>

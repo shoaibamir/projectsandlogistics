@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListingById } from "@/lib/listings";
 import ClaimListingForm from "@/components/ClaimListingForm";
+import { jsonLdScriptProps } from "@/lib/jsonLd";
+import { SITE_URL } from "@/lib/site";
 
 type ListingPageProps = {
   params: Promise<{ id: string }>;
@@ -30,8 +32,23 @@ export default async function ListingPage({ params }: ListingPageProps) {
     notFound();
   }
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: listing.name,
+    url: `${SITE_URL}/directory/${listing.id}`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: listing.city ?? undefined,
+      addressRegion: listing.state ?? undefined,
+      addressCountry: listing.country,
+    },
+  };
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <script {...jsonLdScriptProps(organizationSchema)} />
+
       <Link href="/directory" className="text-sm font-medium text-blue-600 hover:text-blue-700">
         &larr; Back to directory
       </Link>

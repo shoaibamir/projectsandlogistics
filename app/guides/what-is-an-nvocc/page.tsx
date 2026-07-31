@@ -1,15 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getGuideBySlug } from "@/lib/guides";
+import { jsonLdScriptProps } from "@/lib/jsonLd";
+import { SITE_URL } from "@/lib/site";
+
+const guide = getGuideBySlug("what-is-an-nvocc")!;
 
 export const metadata: Metadata = {
-  title: "What is an NVOCC?",
-  description:
-    "A plain-language explanation of non-vessel operating common carriers (NVOCCs) and what they do.",
+  title: guide.title,
+  description: guide.description,
 };
 
 export default function WhatIsAnNvoccPage() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.title,
+    description: guide.description,
+    datePublished: guide.datePublished,
+    url: `${SITE_URL}/guides/${guide.slug}`,
+  };
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <script {...jsonLdScriptProps(articleSchema)} />
+
       <Link href="/guides" className="text-sm font-medium text-blue-600 hover:text-blue-700">
         &larr; All guides
       </Link>

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,12 +16,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Projects & Logistics Directory — Find Global Freight & Logistics Providers",
     template: "%s | Projects & Logistics Directory",
   },
   description:
     "Find and compare sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers worldwide. Free to list.",
+  openGraph: {
+    title: "Projects & Logistics Directory",
+    description:
+      "Find and compare sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers worldwide. Free to list.",
+    url: SITE_URL,
+    siteName: "Projects & Logistics Directory",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

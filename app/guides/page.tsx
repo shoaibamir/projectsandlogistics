@@ -1,30 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GUIDES } from "@/lib/guides";
 
 export const metadata: Metadata = {
   title: "Guides",
   description:
     "Plain-language guides to ocean freight forwarding, NVOCCs, and U.S. freight forwarder licensing.",
 };
-
-const GUIDES = [
-  {
-    href: "/guides/what-is-an-nvocc",
-    title: "What is an NVOCC?",
-    description:
-      "A plain-language explanation of non-vessel operating common carriers and what they do.",
-  },
-  {
-    href: "/guides/ocean-freight-forwarder-vs-nvocc",
-    title: "Ocean freight forwarder vs. NVOCC: what's the difference?",
-    description: "How these two types of ocean transportation intermediary compare.",
-  },
-  {
-    href: "/guides/freight-forwarder-licensing-in-the-us",
-    title: "How freight forwarder licensing works in the US",
-    description: "An overview of FMC licensing for ocean transportation intermediaries.",
-  },
-];
 
 export default function GuidesIndexPage() {
   return (
@@ -37,9 +19,9 @@ export default function GuidesIndexPage() {
 
       <ul className="mt-8 divide-y divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white">
         {GUIDES.map((guide) => (
-          <li key={guide.href}>
+          <li key={guide.slug}>
             <Link
-              href={guide.href}
+              href={`/guides/${guide.slug}`}
               className="block px-4 py-4 transition hover:bg-slate-50"
             >
               <p className="font-semibold text-slate-900">{guide.title}</p>

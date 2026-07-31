@@ -1,15 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getGuideBySlug } from "@/lib/guides";
+import { jsonLdScriptProps } from "@/lib/jsonLd";
+import { SITE_URL } from "@/lib/site";
+
+const guide = getGuideBySlug("ocean-freight-forwarder-vs-nvocc")!;
 
 export const metadata: Metadata = {
-  title: "Ocean Freight Forwarder vs. NVOCC",
-  description:
-    "How ocean freight forwarders and NVOCCs compare, and why the distinction matters when choosing a provider.",
+  title: guide.title,
+  description: guide.description,
 };
 
 export default function ForwarderVsNvoccPage() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.title,
+    description: guide.description,
+    datePublished: guide.datePublished,
+    url: `${SITE_URL}/guides/${guide.slug}`,
+  };
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <script {...jsonLdScriptProps(articleSchema)} />
+
       <Link href="/guides" className="text-sm font-medium text-blue-600 hover:text-blue-700">
         &larr; All guides
       </Link>

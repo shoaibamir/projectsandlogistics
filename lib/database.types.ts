@@ -77,6 +77,7 @@ export type Database = {
       listings: {
         Row: {
           category: string
+          city: string | null
           claimed: boolean
           country: string
           created_at: string
@@ -85,11 +86,13 @@ export type Database = {
           license_number: string | null
           name: string
           source: string | null
+          state: string | null
           verified: boolean
           website: string | null
         }
         Insert: {
           category: string
+          city?: string | null
           claimed?: boolean
           country: string
           created_at?: string
@@ -98,11 +101,13 @@ export type Database = {
           license_number?: string | null
           name: string
           source?: string | null
+          state?: string | null
           verified?: boolean
           website?: string | null
         }
         Update: {
           category?: string
+          city?: string | null
           claimed?: boolean
           country?: string
           created_at?: string
@@ -111,6 +116,7 @@ export type Database = {
           license_number?: string | null
           name?: string
           source?: string | null
+          state?: string | null
           verified?: boolean
           website?: string | null
         }

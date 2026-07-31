@@ -13,6 +13,8 @@ export type Listing = {
   name: string;
   category: Category;
   country: string;
+  city: string | null;
+  state: string | null;
   description: string;
   website: string | null;
   verified: boolean;
@@ -31,7 +33,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 const LISTING_COLUMNS =
-  "id, name, category, country, description, website, verified, license_number, source, claimed";
+  "id, name, category, country, city, state, description, website, verified, license_number, source, claimed";
 
 export async function getListings(): Promise<Listing[]> {
   const { data, error } = await supabase
