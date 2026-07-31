@@ -53,7 +53,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
   }
 
   const hasTrustSignal = Boolean(listing.license_number);
-  const hasContactInfo = Boolean(listing.phone || listing.primary_contact_name);
+  const hasContactInfo = Boolean(
+    listing.phone || listing.primary_contact_name || listing.contact_email,
+  );
   const hasServices = listing.services.length > 0;
   const hasCertifications = listing.certifications.length > 0;
   const hasCompanyInfo = Boolean(
@@ -264,6 +266,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <dd className="font-medium text-slate-900">
                   <a href={`tel:${listing.phone}`} className="hover:text-blue-600">
                     {listing.phone}
+                  </a>
+                </dd>
+              </div>
+            )}
+            {listing.contact_email && (
+              <div className="flex gap-2">
+                <dt className="text-slate-500">Email:</dt>
+                <dd className="font-medium text-slate-900">
+                  <a href={`mailto:${listing.contact_email}`} className="hover:text-blue-600">
+                    {listing.contact_email}
                   </a>
                 </dd>
               </div>

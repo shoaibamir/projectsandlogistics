@@ -81,6 +81,7 @@ export type Database = {
           city: string | null
           claimed: boolean
           company_size: string | null
+          contact_email: string | null
           country: string
           created_at: string
           description: string
@@ -106,6 +107,7 @@ export type Database = {
           city?: string | null
           claimed?: boolean
           company_size?: string | null
+          contact_email?: string | null
           country: string
           created_at?: string
           description: string
@@ -131,6 +133,7 @@ export type Database = {
           city?: string | null
           claimed?: boolean
           company_size?: string | null
+          contact_email?: string | null
           country?: string
           created_at?: string
           description?: string
