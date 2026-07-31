@@ -84,7 +84,12 @@ export type Database = {
           description: string
           id: string
           license_number: string | null
+          license_renewal_date: string | null
+          license_type: string | null
           name: string
+          phone: string | null
+          primary_contact_name: string | null
+          services: string[]
           source: string | null
           state: string | null
           verified: boolean
@@ -99,7 +104,12 @@ export type Database = {
           description: string
           id: string
           license_number?: string | null
+          license_renewal_date?: string | null
+          license_type?: string | null
           name: string
+          phone?: string | null
+          primary_contact_name?: string | null
+          services?: string[]
           source?: string | null
           state?: string | null
           verified?: boolean
@@ -114,7 +124,12 @@ export type Database = {
           description?: string
           id?: string
           license_number?: string | null
+          license_renewal_date?: string | null
+          license_type?: string | null
           name?: string
+          phone?: string | null
+          primary_contact_name?: string | null
+          services?: string[]
           source?: string | null
           state?: string | null
           verified?: boolean
