@@ -77,8 +77,10 @@ export type Database = {
       listings: {
         Row: {
           category: string
+          certifications: string[]
           city: string | null
           claimed: boolean
+          company_size: string | null
           country: string
           created_at: string
           description: string
@@ -86,19 +88,24 @@ export type Database = {
           license_number: string | null
           license_renewal_date: string | null
           license_type: string | null
+          linkedin_url: string | null
           name: string
           phone: string | null
           primary_contact_name: string | null
           services: string[]
           source: string | null
           state: string | null
+          street_address: string | null
           verified: boolean
           website: string | null
+          year_founded: number | null
         }
         Insert: {
           category: string
+          certifications?: string[]
           city?: string | null
           claimed?: boolean
+          company_size?: string | null
           country: string
           created_at?: string
           description: string
@@ -106,19 +113,24 @@ export type Database = {
           license_number?: string | null
           license_renewal_date?: string | null
           license_type?: string | null
+          linkedin_url?: string | null
           name: string
           phone?: string | null
           primary_contact_name?: string | null
           services?: string[]
           source?: string | null
           state?: string | null
+          street_address?: string | null
           verified?: boolean
           website?: string | null
+          year_founded?: number | null
         }
         Update: {
           category?: string
+          certifications?: string[]
           city?: string | null
           claimed?: boolean
+          company_size?: string | null
           country?: string
           created_at?: string
           description?: string
@@ -126,14 +138,17 @@ export type Database = {
           license_number?: string | null
           license_renewal_date?: string | null
           license_type?: string | null
+          linkedin_url?: string | null
           name?: string
           phone?: string | null
           primary_contact_name?: string | null
           services?: string[]
           source?: string | null
           state?: string | null
+          street_address?: string | null
           verified?: boolean
           website?: string | null
+          year_founded?: number | null
         }
         Relationships: []
       }
@@ -168,6 +183,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "removal_requests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          rating: number
+          review_text: string | null
+          reviewer_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          rating: number
+          review_text?: string | null
+          reviewer_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          rating?: number
+          review_text?: string | null
+          reviewer_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "listings"
