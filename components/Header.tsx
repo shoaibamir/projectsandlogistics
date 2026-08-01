@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { signOutAction } from "@/app/auth/actions";
 
-export default function Header() {
+export default async function Header() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <header className="border-b border-slate-200 bg-white">
       <nav
@@ -17,12 +24,37 @@ export default function Header() {
           >
             Directory
           </Link>
+          {user && (
+            <Link
+              href="/my-listings"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900"
+            >
+              My Listings
+            </Link>
+          )}
           <Link
             href="/list-your-company"
             className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             List your company
           </Link>
+          {user ? (
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className="text-sm font-medium text-slate-600 hover:text-slate-900"
+              >
+                Log out
+              </button>
+            </form>
+          ) : (
+            <Link
+              href="/login"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900"
+            >
+              Log in
+            </Link>
+          )}
         </div>
       </nav>
     </header>

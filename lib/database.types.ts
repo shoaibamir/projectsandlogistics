@@ -47,6 +47,8 @@ export type Database = {
           message: string | null
           status: string
           submitted_at: string
+          user_id: string
+          verification_info: string | null
         }
         Insert: {
           business_email: string
@@ -55,6 +57,8 @@ export type Database = {
           message?: string | null
           status?: string
           submitted_at?: string
+          user_id: string
+          verification_info?: string | null
         }
         Update: {
           business_email?: string
@@ -63,6 +67,8 @@ export type Database = {
           message?: string | null
           status?: string
           submitted_at?: string
+          user_id?: string
+          verification_info?: string | null
         }
         Relationships: [
           {
@@ -80,6 +86,8 @@ export type Database = {
           certifications: string[]
           city: string | null
           claimed: boolean
+          claimed_at: string | null
+          claimed_by: string | null
           company_size: string | null
           contact_email: string | null
           country: string
@@ -91,11 +99,14 @@ export type Database = {
           license_type: string | null
           linkedin_url: string | null
           name: string
+          owner_id: string | null
           phone: string | null
+          plan: string
           primary_contact_name: string | null
           services: string[]
           source: string | null
           state: string | null
+          status: string
           street_address: string | null
           verified: boolean
           website: string | null
@@ -106,6 +117,8 @@ export type Database = {
           certifications?: string[]
           city?: string | null
           claimed?: boolean
+          claimed_at?: string | null
+          claimed_by?: string | null
           company_size?: string | null
           contact_email?: string | null
           country: string
@@ -117,11 +130,14 @@ export type Database = {
           license_type?: string | null
           linkedin_url?: string | null
           name: string
+          owner_id?: string | null
           phone?: string | null
+          plan?: string
           primary_contact_name?: string | null
           services?: string[]
           source?: string | null
           state?: string | null
+          status?: string
           street_address?: string | null
           verified?: boolean
           website?: string | null
@@ -132,6 +148,8 @@ export type Database = {
           certifications?: string[]
           city?: string | null
           claimed?: boolean
+          claimed_at?: string | null
+          claimed_by?: string | null
           company_size?: string | null
           contact_email?: string | null
           country?: string
@@ -143,11 +161,14 @@ export type Database = {
           license_type?: string | null
           linkedin_url?: string | null
           name?: string
+          owner_id?: string | null
           phone?: string | null
+          plan?: string
           primary_contact_name?: string | null
           services?: string[]
           source?: string | null
           state?: string | null
+          status?: string
           street_address?: string | null
           verified?: boolean
           website?: string | null
@@ -233,7 +254,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      approve_claim: { Args: { claim_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
