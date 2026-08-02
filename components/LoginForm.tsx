@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-type Status = "idle" | "sending" | "sent" | "error";
+type Status = "idle" | "sending" | "sent" | "verifying" | "error";
 
 function safeRedirectTarget(raw: string | null): string {
   if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return "/";
@@ -12,11 +12,13 @@ function safeRedirectTarget(raw: string | null): string {
 }
 
 export default function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = safeRedirectTarget(searchParams.get("redirectTo"));
   const callbackError = searchParams.get("error");
   const callbackReason = searchParams.get("reason");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [status, setStatus] = useState<Status>(callbackError ? "error" : "idle");
   const [errorMessage, setErrorMessage] = useState(
     callbackError ? callbackReason || "Sign-in failed. Please try again." : "",
@@ -59,10 +61,61 @@ export default function LoginForm() {
     setStatus("sent");
   }
 
-  if (status === "sent") {
+  async function handleVerifyCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("verifying");
+    setErrorMessage("");
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: code,
+      type: "email",
+    });
+
+    if (error) {
+      setStatus("sent");
+      setErrorMessage(error.message);
+      return;
+    }
+
+    router.push(redirectTo);
+    router.refresh();
+  }
+
+  if (status === "sent" || status === "verifying") {
     return (
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
-        Check your email — we sent a sign-in link to {email}.
+      <div className="space-y-4">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
+          Check your email — we sent a sign-in link to {email}. Opening the
+          link in the same browser signs you in automatically. If you open it
+          somewhere else, enter the verification code from that email instead.
+        </div>
+
+        <form onSubmit={handleVerifyCode}>
+          <label htmlFor="login-code" className="block text-sm font-medium text-slate-700">
+            Verification code
+          </label>
+          <input
+            id="login-code"
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            required
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+          />
+          <button
+            type="submit"
+            disabled={status === "verifying"}
+            className="mt-4 w-full rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          >
+            {status === "verifying" ? "Verifying…" : "Verify code"}
+          </button>
+        </form>
+
+        {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
       </div>
     );
   }
