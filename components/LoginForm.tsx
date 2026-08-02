@@ -14,9 +14,13 @@ function safeRedirectTarget(raw: string | null): string {
 export default function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = safeRedirectTarget(searchParams.get("redirectTo"));
+  const callbackError = searchParams.get("error");
+  const callbackReason = searchParams.get("reason");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [status, setStatus] = useState<Status>(callbackError ? "error" : "idle");
+  const [errorMessage, setErrorMessage] = useState(
+    callbackError ? callbackReason || "Sign-in failed. Please try again." : "",
+  );
 
   async function handleGoogleSignIn() {
     const supabase = createClient();

@@ -17,6 +17,10 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    console.error("exchangeCodeForSession failed:", error);
+    return NextResponse.redirect(
+      `${origin}/login?error=auth-failed&reason=${encodeURIComponent(error.message)}`,
+    );
   }
 
   return NextResponse.redirect(`${origin}/login?error=auth-failed`);
