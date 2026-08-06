@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCategories } from "@/lib/listings";
+import { getCategories, getRecentListings } from "@/lib/listings";
 import CategoryTile from "@/components/CategoryTile";
+import RecentListingCard from "@/components/RecentListingCard";
+import NewsListItem from "@/components/NewsListItem";
+import BlogCard from "@/components/BlogCard";
 import { GlobeIcon, ShipIcon, PlaneIcon, TruckIcon } from "@/components/icons";
+import { client } from "@/sanity/lib/client";
+import { recentArticlesQuery, type ArticleListItem } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: {
@@ -12,8 +17,16 @@ export const metadata: Metadata = {
     "Find and compare sea freight, air freight, trucking, warehousing, customs brokerage and rail freight providers worldwide. Free to list.",
 };
 
+export const revalidate = 300;
+
 export default async function HomePage() {
-  const categories = await getCategories();
+  const [categories, recentListings, news, blogPosts, guides] = await Promise.all([
+    getCategories(),
+    getRecentListings(4),
+    client.fetch<ArticleListItem[]>(recentArticlesQuery, { contentType: "news", limit: 3 }),
+    client.fetch<ArticleListItem[]>(recentArticlesQuery, { contentType: "blog", limit: 2 }),
+    client.fetch<ArticleListItem[]>(recentArticlesQuery, { contentType: "guide", limit: 3 }),
+  ]);
 
   return (
     <>
@@ -53,6 +66,78 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {recentListings.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold text-slate-900">Recently listed companies</h2>
+            <Link href="/directory" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+              View directory
+            </Link>
+          </div>
+          <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {recentListings.map((listing) => (
+              <RecentListingCard key={listing.id} listing={listing} />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {news.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold text-slate-900">Latest news</h2>
+            <Link href="/news" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+              View all news
+            </Link>
+          </div>
+          <ul className="mt-6 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            {news.map((article) => (
+              <NewsListItem key={article._id} article={article} />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {blogPosts.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold text-slate-900">From the blog</h2>
+            <Link href="/blog" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+              View all posts
+            </Link>
+          </div>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {blogPosts.map((article) => (
+              <BlogCard key={article._id} article={article} />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {guides.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold text-slate-900">Guides</h2>
+            <Link href="/guides" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+              View all guides
+            </Link>
+          </div>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+            {guides.map((article) => (
+              <li key={article._id}>
+                <Link
+                  href={`/guides/${article.slug}`}
+                  className="block h-full rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300"
+                >
+                  <p className="font-semibold text-slate-900">{article.title}</p>
+                  <p className="mt-1 text-sm text-slate-600">{article.summary}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="bg-slate-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

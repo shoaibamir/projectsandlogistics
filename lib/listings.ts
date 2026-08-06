@@ -33,6 +33,7 @@ export type Listing = {
   linkedin_url: string | null;
   certifications: string[];
   status: "pending" | "published";
+  created_at: string;
 };
 
 export const CATEGORIES: Category[] = [
@@ -45,7 +46,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 const LISTING_COLUMNS =
-  "id, name, category, country, city, state, street_address, description, website, verified, license_number, license_type, license_renewal_date, source, claimed, phone, primary_contact_name, contact_email, services, year_founded, company_size, linkedin_url, certifications, status";
+  "id, name, category, country, city, state, street_address, description, website, verified, license_number, license_type, license_renewal_date, source, claimed, phone, primary_contact_name, contact_email, services, year_founded, company_size, linkedin_url, certifications, status, created_at";
 
 export async function getListings(): Promise<Listing[]> {
   const { data, error } = await supabase
@@ -53,6 +54,19 @@ export async function getListings(): Promise<Listing[]> {
     .select(LISTING_COLUMNS)
     .eq("status", "published")
     .order("name");
+
+  if (error) throw error;
+
+  return (data ?? []) as Listing[];
+}
+
+export async function getRecentListings(limit: number): Promise<Listing[]> {
+  const { data, error } = await supabase
+    .from("listings")
+    .select(LISTING_COLUMNS)
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(limit);
 
   if (error) throw error;
 

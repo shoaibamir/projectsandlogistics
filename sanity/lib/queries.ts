@@ -8,6 +8,7 @@ export type ArticleListItem = {
   slug: string;
   summary: string;
   publishedAt: string;
+  featuredImage?: unknown;
   categories: { title: string; slug: string }[];
 };
 
@@ -63,6 +64,7 @@ const articleListProjection = groq`
     "slug": slug.current,
     summary,
     publishedAt,
+    featuredImage,
     "categories": categories[]->{title, "slug": slug.current},
   }
 `;
@@ -70,6 +72,12 @@ const articleListProjection = groq`
 export const articleListQuery = groq`
   *[_type == "article" && contentType == $contentType && defined(slug.current)]
   | order(publishedAt desc)
+  ${articleListProjection}
+`;
+
+export const recentArticlesQuery = groq`
+  *[_type == "article" && contentType == $contentType && defined(slug.current)]
+  | order(publishedAt desc) [0...$limit]
   ${articleListProjection}
 `;
 

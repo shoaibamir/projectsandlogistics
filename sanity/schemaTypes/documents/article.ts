@@ -43,6 +43,14 @@ export const article = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "featuredImage",
+      title: "Featured image",
+      type: "image",
+      group: "content",
+      options: { hotspot: true },
+      description: "Shown as the thumbnail on index pages and the homepage. Falls back to a placeholder if empty.",
+    }),
+    defineField({
       name: "summary",
       title: "Summary",
       type: "text",
