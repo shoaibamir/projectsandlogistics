@@ -73,6 +73,20 @@ export async function getRecentListings(limit: number): Promise<Listing[]> {
   return (data ?? []) as Listing[];
 }
 
+export async function getRecentVerifiedListings(limit: number): Promise<Listing[]> {
+  const { data, error } = await supabase
+    .from("listings")
+    .select(LISTING_COLUMNS)
+    .eq("status", "published")
+    .eq("verified", true)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+
+  return (data ?? []) as Listing[];
+}
+
 export async function getListingById(id: string): Promise<Listing | null> {
   const { data, error } = await supabase
     .from("listings")

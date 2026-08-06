@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Header from "@/components/Header";
+import ConditionalHeader from "@/components/ConditionalHeader";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/site";
 
@@ -44,7 +45,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-white text-slate-900">
-        <Header />
+        <ConditionalHeader>
+          <Header />
+        </ConditionalHeader>
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

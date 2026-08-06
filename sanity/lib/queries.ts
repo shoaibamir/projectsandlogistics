@@ -117,3 +117,47 @@ export const allArticlesForSitemapQuery = groq`
     _updatedAt,
   }
 `;
+
+// --- Homepage-only projections: intentionally minimal, never select body ---
+
+export type FeaturedArticle = {
+  title: string;
+  slug: string;
+  summary: string;
+  featuredImage?: unknown;
+  publishedAt: string;
+  author?: { name: string };
+};
+
+export type HomepageArticle = {
+  title: string;
+  slug: string;
+  featuredImage?: unknown;
+  publishedAt: string;
+  // Character count of the body, not the body itself -- just enough to
+  // estimate a "N min read" label without shipping full article content.
+  readingChars?: number;
+};
+
+export const featuredNewsQuery = groq`
+  *[_type == "article" && contentType == "news" && defined(slug.current)]
+  | order(publishedAt desc)[0]{
+    title,
+    "slug": slug.current,
+    summary,
+    featuredImage,
+    publishedAt,
+    author->{name},
+  }
+`;
+
+export const homepageArticleQuery = groq`
+  *[_type == "article" && contentType == $contentType && defined(slug.current)]
+  | order(publishedAt desc)[0...$limit]{
+    title,
+    "slug": slug.current,
+    featuredImage,
+    publishedAt,
+    "readingChars": length(pt::text(body)),
+  }
+`;
