@@ -27,7 +27,7 @@ export default function Masthead() {
           Projects &amp; Logistics
         </h1>
         <p className="mt-2 font-serif text-sm italic text-slate-600">
-          The directory for global logistics providers
+          Logistics and supply chain resources
         </p>
 
         <div className="mt-6 border-t-4 border-slate-900" />
