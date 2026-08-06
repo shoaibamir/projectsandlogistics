@@ -1,0 +1,19 @@
+import "server-only";
+import { createClient } from "next-sanity";
+import { apiVersion, dataset, projectId } from "../env";
+
+function requireToken(): string {
+  const token = process.env.SANITY_API_TOKEN;
+  if (!token) {
+    throw new Error("Missing environment variable: SANITY_API_TOKEN");
+  }
+  return token;
+}
+
+export const writeClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: requireToken(),
+});

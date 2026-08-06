@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
+	"main": "workers/scheduled-entry.js",
 	"name": "logistics-directory",
 	"routes": [
 		{
@@ -8,6 +8,10 @@
 			"custom_domain": true
 		}
 	],
+	"triggers": {
+		// Runs the news feed ingestion job (app/api/ingest-feeds) every 6 hours.
+		"crons": ["0 */6 * * *"]
+	},
 	"compatibility_date": "2026-07-30",
 	"compatibility_flags": [
 		"nodejs_compat",

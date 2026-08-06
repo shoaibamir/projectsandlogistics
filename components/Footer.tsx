@@ -11,6 +11,12 @@ export default function Footer() {
           <Link href="/guides" className="text-slate-600 hover:text-slate-900">
             Guides
           </Link>
+          <Link href="/blog" className="text-slate-600 hover:text-slate-900">
+            Blog
+          </Link>
+          <Link href="/news" className="text-slate-600 hover:text-slate-900">
+            News
+          </Link>
           <Link href="/privacy" className="text-slate-600 hover:text-slate-900">
             Privacy
           </Link>

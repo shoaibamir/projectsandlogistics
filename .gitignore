@@ -42,6 +42,10 @@ yarn-error.log*
 .dev.vars
 .dev.vars.*
 
+# sanity
+.sanity
+/dist
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
