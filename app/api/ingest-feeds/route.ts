@@ -2,7 +2,8 @@ import "server-only";
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import Parser from "rss-parser";
-import { writeClient } from "@/sanity/lib/write-client";
+import { getWriteClient } from "@/sanity/lib/write-client";
+import type { SanityClient } from "next-sanity";
 import { paragraphsToBlocks } from "@/sanity/lib/portableText";
 import { uniqueSlug } from "@/lib/slug";
 
@@ -113,8 +114,8 @@ async function summarizeWithLLM(item: {
   return toolUse.input as SummaryResult;
 }
 
-async function alreadyIngested(sourceUrl: string): Promise<boolean> {
-  const existing = await writeClient.fetch(
+async function alreadyIngested(client: SanityClient, sourceUrl: string): Promise<boolean> {
+  const existing = await client.fetch(
     `*[_type == "article" && sourceUrl == $url][0]._id`,
     { url: sourceUrl },
     { perspective: "raw" },
@@ -126,6 +127,8 @@ export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const writeClient = getWriteClient();
 
   const feedSources: FeedSource[] = await writeClient.fetch(
     `*[_type == "feedSource" && active == true]{ _id, name, feedUrl, defaultCategory }`,
@@ -150,7 +153,7 @@ export async function POST(request: Request) {
           continue;
         }
 
-        if (await alreadyIngested(link)) {
+        if (await alreadyIngested(writeClient, link)) {
           skipped += 1;
           continue;
         }
