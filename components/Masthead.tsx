@@ -18,21 +18,30 @@ export default function Masthead() {
   });
 
   return (
-    <div className="border-b border-slate-900 bg-white">
-      <div className="mx-auto max-w-6xl px-4 pt-8 text-center sm:px-6 lg:px-8">
-        <p className="text-xs tracking-[0.2em] text-slate-500 [font-variant:small-caps]">
-          {today}
-        </p>
-        <h1 className="mt-3 font-serif text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
-          Projects &amp; Logistics
-        </h1>
-        <p className="mt-2 font-serif text-sm italic text-slate-600">
-          Logistics and supply chain resources
-        </p>
+    <>
+      <div className="bg-white pt-8 text-center">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <p className="text-xs tracking-[0.2em] text-slate-500 [font-variant:small-caps]">
+            {today}
+          </p>
+          <Link href="/" className="mt-3 block">
+            <h1 className="font-serif text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
+              Projects &amp; Logistics
+            </h1>
+          </Link>
+          <p className="mt-2 font-serif text-sm italic text-slate-600">
+            Logistics and supply chain resources
+          </p>
 
-        <div className="mt-6 border-t-4 border-slate-900" />
+          <div className="mt-6 border-t-4 border-slate-900" />
+        </div>
+      </div>
 
-        <nav aria-label="Primary" className="flex flex-wrap justify-center gap-x-8 gap-y-2 py-3">
+      <div className="sticky top-0 z-20 border-b border-slate-300 bg-white">
+        <nav
+          aria-label="Primary"
+          className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-8 gap-y-2 px-4 py-3 sm:px-6 lg:px-8"
+        >
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -44,7 +53,6 @@ export default function Masthead() {
           ))}
         </nav>
       </div>
-      <div className="border-t border-slate-300" />
-    </div>
+    </>
   );
 }

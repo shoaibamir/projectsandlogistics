@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "studio",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["sanity", "dev"],
+      "port": 3333
     }
   ]
 }
